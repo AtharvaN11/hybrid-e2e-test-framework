@@ -1,140 +1,170 @@
-# Hybrid End-to-End Test Framework (Beginner-Friendly)
+# Hybrid E2E Test Automation Framework
 
-A small, runnable portfolio project demonstrating **API + browser UI + SQL database** testing in one flow.
+A Python-based test automation project that validates a customer workflow across **REST APIs, browser UI interactions, and SQLite database persistence**.
 
-## What this project does
+The goal of this project is to demonstrate how different testing layers can work together to verify that a feature behaves correctly from the API request to the user interface and the underlying database.
 
-1. Starts a local demo web app.
-2. Creates a customer through its REST API.
-3. Opens the web page with Playwright and checks that the customer appears.
-4. Queries SQLite directly to confirm the record was saved.
-5. Saves test-run results and builds a simple HTML dashboard with pass rate, duration, and failed/flaky-test indicators.
+## Project Overview
 
-> This is a learning/demo framework. It does not prove production experience. Run it yourself before listing measured metrics on a resume.
+In a typical application, an API can return a successful response while the UI or database behaves incorrectly. This project combines multiple testing approaches to catch inconsistencies across these layers.
 
-## Tech stack
+The framework uses a small Flask demo application with a customer workflow and automated tests built using Pytest and Playwright.
 
-- Python 3.10+
-- Flask (tiny demo application)
-- Playwright (browser automation)
-- Pytest (test runner)
-- Requests (API calls)
-- SQLite (local database)
-- HTML report dashboard
-- GitHub Actions workflow (optional CI)
+## What This Project Tests
 
-## 1. Install
+- **API testing:** Validate API responses and customer-related operations.
+- **UI automation:** Use Playwright to interact with the customer interface in a real browser.
+- **Database validation:** Check SQLite persistence to verify that customer data is stored correctly.
+- **Reusable test setup:** Use Pytest fixtures and shared utilities to reduce duplication.
+- **Page Object Model:** Keep browser interactions separate from test assertions.
+- **Test reporting:** Generate a run summary containing test results, duration, and run history.
+- **CI integration:** Include a GitHub Actions workflow for automated test execution.
 
-Open a terminal inside this project folder.
+## Test Workflow
+
+The main end-to-end scenario connects the different testing layers:
+
+1. Prepare the application and test environment.
+2. Create or process customer data through the API.
+3. Open the application using Playwright and verify the corresponding UI behaviour.
+4. Validate that the expected customer data persists in SQLite.
+5. Execute assertions and collect test results.
+6. Generate a test-run report.
+
+This approach helps identify failures that isolated API or UI tests might not catch.
+
+## Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| Python | Core programming language |
+| Pytest | Test execution, assertions, and fixtures |
+| Playwright | Browser-based UI automation |
+| Flask | Demo application and API endpoints |
+| SQLite | Persistent test data storage |
+| Git & GitHub | Version control and project hosting |
+| GitHub Actions | CI workflow configuration |
+
+## Project Structure
+
+```text
+project-5-hybrid-e2e-test-framework/
+├── .github/
+│   └── workflows/
+│       └── tests.yml
+├── pages/
+│   ├── __init__.py
+│   └── customers_page.py
+├── reports/
+│   ├── .gitkeep
+│   └── build_dashboard.py
+├── tests/
+│   ├── __init__.py
+│   ├── test_api.py
+│   └── test_customer_flow.py
+├── utils/
+│   ├── __init__.py
+│   ├── db.py
+│   └── results.py
+├── app.py
+├── conftest.py
+├── pytest.ini
+├── requirements.txt
+├── run_and_report.py
+└── README.md
+```
+
+## Getting Started
+
+### 1. Clone the repository
 
 ```bash
+git clone https://github.com/YOUR-USERNAME/hybrid-e2e-test-framework.git
+cd hybrid-e2e-test-framework
+```
+
+Replace `YOUR-USERNAME` with your GitHub username.
+
+### 2. Create a virtual environment
+
+**Windows PowerShell:**
+
+```powershell
 python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 ```
 
-Windows:
-```bash
-.venv\Scripts\activate
-```
-
-macOS/Linux:
-```bash
-source .venv/bin/activate
-```
-
-Install dependencies and the browser:
+### 3. Install dependencies
 
 ```bash
 python -m pip install -r requirements.txt
 python -m playwright install chromium
 ```
 
-## 2. Run the demo app
+### 4. Run the application
 
-In terminal window 1:
+In the first terminal:
 
 ```bash
 python app.py
 ```
 
-Leave it running. The app is available at `http://127.0.0.1:5000`.
+Keep the application running while executing tests that depend on it.
 
-## 3. Run tests
+### 5. Run the tests
 
-Open terminal window 2 in the same folder:
-
-```bash
-pytest -v
-```
-
-The tests use the running demo app. They create records through the API, inspect the UI, and query SQLite.
-
-## 4. Generate the dashboard
-
-After running tests:
+Open a second terminal, activate the same virtual environment, and execute:
 
 ```bash
-python reports/build_dashboard.py
+python -m pytest -v
 ```
 
-Open `reports/dashboard.html` in your browser. The dashboard summarizes the recorded test runs. A first run may show only one run; flaky-test detection becomes meaningful after repeated runs.
-
-## 5. Run tests and record a result in one command
-
-With the demo app still running:
+To run the project's reporting script:
 
 ```bash
 python run_and_report.py
 ```
 
-This runs Pytest, stores a JSON run record, and refreshes the dashboard. It returns the test process exit code.
+Check the script and test configuration for any additional setup required by your environment.
 
-## Project map
+## Test Reporting
 
-```text
-app.py                         Demo application, API routes, UI and SQLite setup
-tests/test_customer_flow.py    Integrated API -> UI -> database test
-tests/test_api.py              API validation examples
-pages/customers_page.py        Small Page Object Model example
-utils/db.py                    Database helper functions
-utils/results.py               Test-run result storage
-reports/build_dashboard.py     Creates the HTML dashboard
-run_and_report.py               One-command test/report runner
-.github/workflows/tests.yml    Example CI workflow
-```
+The project includes utilities for summarising test execution and generating a dashboard.
 
-## Beginner glossary
+The reporting workflow is intended to help inspect:
 
-- **End-to-end (E2E) test:** Checks a complete user workflow across multiple parts of an application.
-- **REST API:** An interface that lets software send requests to an application, often using HTTP.
-- **Pytest:** A Python tool that discovers and runs tests.
-- **Playwright:** A browser automation tool used to click, type, and inspect web pages.
-- **SQL / SQLite:** SQL is a language for querying data; SQLite stores the demo database in a local file.
-- **Persistence:** Data remains stored after a request finishes.
-- **Page Object Model (POM):** A pattern that keeps page locators and page actions in a separate class.
-- **Pass rate:** Passed tests divided by all tests in a run, multiplied by 100.
-- **Flaky test:** A test that sometimes passes and sometimes fails without a relevant code change. This project estimates flakiness from inconsistent outcomes across recorded runs; it needs repeated runs to be useful.
-- **CI/CD:** Automated checks that can run when code is pushed or a pull request is opened.
-- **Test setup time:** Time spent preparing state before the actual test action. This project uses API setup to avoid manually creating the test customer through the UI, but does not calculate a validated percentage reduction.
+- Test pass/fail counts
+- Execution duration
+- Run history
+- Summary information for previous executions
 
-## Honest resume wording
+Generated reports are local outputs and are excluded from version control where configured.
 
-Use this only after you have installed, run, and understood the project. Do not claim a percentage unless you measure it.
+## Engineering Practices Demonstrated
 
-**Hybrid End-to-End Test Framework | Python, Playwright, Pytest, REST API, SQLite**
-- Built an integrated test flow that creates customer data through a REST API, verifies it in the browser UI, and checks persistence in SQLite.
-- Added reusable Pytest fixtures, a Page Object Model, and API validation tests for maintainable automation.
-- Generated an HTML test-health dashboard showing run duration, pass rate, and tests with inconsistent outcomes across recorded runs.
+- Separation of test logic and page interactions
+- Reusable fixtures and helper functions
+- API, UI, and database-level assertions
+- Test configuration through Pytest
+- Dependency management using `requirements.txt`
+- Version control and CI workflow configuration
 
-If you want to include “reduced setup time by X%”, measure a baseline first; the repository intentionally does not invent that number.
+## Current Scope and Limitations
 
-## Troubleshooting
+This is a learning and portfolio project built around a demo application. It is not intended to represent a production-scale testing platform.
 
-- **Connection refused:** Ensure `python app.py` is running in terminal 1.
-- **Playwright browser missing:** Run `python -m playwright install chromium`.
-- **Port 5000 already in use:** Stop the other app or change `BASE_URL` and the port consistently.
-- **Database seems old:** Stop the app, delete `test_app.db`, then restart it. This resets local demo data.
-- **Dashboard has no data:** Run `python run_and_report.py` after starting the app.
+Test results and CI status depend on the environment and the tests actually executed. Performance benchmarks, coverage percentages, and reliability metrics should only be reported after they have been measured.
 
-## Important
+## Future Improvements
 
-This is a local demo app and should not be used with real customer information. The example credentials/data are fictional.
+- Add negative and boundary-value test scenarios.
+- Improve test-data isolation and cleanup.
+- Capture browser screenshots and traces on failure.
+- Expand CI reporting and artifact retention.
+- Add API schema validation and broader database integrity checks.
+
+## Author
+
+**Atharva Nandgaonkar**
+
+Python Test Automation | API Testing | UI Automation | Pytest | Playwright
