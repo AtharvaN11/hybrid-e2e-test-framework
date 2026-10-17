@@ -1,0 +1,39 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+
+# Pytest cache
+.pytest_cache/
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# Local database
+test_app.db
+*.sqlite
+*.sqlite3
+
+# Generated test reports
+reports/run_history.json
+reports/dashboard.html
+playwright-report/
+test-results/
+
+# Secrets and environment variables
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code settings
+.vscode/
+
+reports/last_run.xml
