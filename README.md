@@ -140,6 +140,64 @@ The reporting workflow is intended to help inspect:
 
 Generated reports are local outputs and are excluded from version control where configured.
 
+## Test Execution Results
+
+The current local test run completed successfully:
+
+- **Full test suite:** 4 tests passed.
+- **API test suite:** 3 tests passed.
+- **Workflow:** API behaviour, browser UI verification, and SQLite persistence.
+
+Run the full suite from the project root:
+
+```powershell
+python -m pytest -v
+```
+
+Run only the API tests:
+
+```powershell
+python -m pytest -v tests/test_api.py
+```
+
+Generate an HTML report (requires `pytest-html`):
+
+```powershell
+python -m pytest -v --html=reports/test-report.html --self-contained-html
+```
+
+These results describe the local run and are not a claim about a remote CI run.
+
+## Screenshots
+
+The `screenshots/` folder contains evidence from the local test run and project structure.
+
+### 1. Full Test Execution
+
+![Full test execution](screenshots/test-execution.png)
+
+### 2. HTML Test Report
+
+![HTML test report](screenshots/test_report.png)
+
+### 3. API Tests
+
+![API test results](screenshots/api-testing.png)
+
+### 4. Customer Portal UI
+
+![Customer Portal UI](screenshots/ui-verification.png)
+
+### 5. SQLite Database Verification
+
+![SQLite customer records](screenshots/database-verification.png)
+
+### 6. Project Structure
+
+![Project structure](screenshots/project-structure.png)
+
+> Screenshot links are relative to this repository. Keep the image files in `screenshots/` and make sure their names match the links above. If Windows is hiding file extensions, verify the actual extensions before committing.
+
 ## Engineering Practices Demonstrated
 
 - Separation of test logic and page interactions
